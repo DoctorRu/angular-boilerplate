@@ -1,0 +1,114 @@
+<div class="container">
+    <div class="row">
+        <div>
+            <button class="btn btn-primary">Voltar para a busca</button>
+        </div>
+    </div>
+    <br>
+
+    <!-- Associado -->
+    <div class="row">
+        <!-- Coluna esquerda -->
+        <div class="col-6">
+            <div class="row p-2 shadow-sm">
+                <div class="col">
+                    <img [src]="person.imageProfile" alt="Card profile image">
+                </div>
+                <div class="col">
+                    <p>Associado<br>{{ person.name }}</p>
+                    <p>CPF<br>{{ person.document }}</p>
+                </div>
+                <div class="col text-right">
+                    <button class="btn btn-primary">Isento</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna direita -->
+        <div class="col-6">
+            <div class="row p-2 shadow-sm h-100">
+                <div class="col height">
+                    <p>Valor a pagar: R$ 60,00</p>
+                    <button (click)="modalPaymentOpen()"
+                            class="btn btn-info">Pagar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+
+    <!-- Dependentes -->
+    <div class="row shadow-sm">
+        <!-- Coluna Esquerda -->
+        <div class="col-6">
+            <div class="row">
+                <div class="col-12 text-left">
+                    Dependentes
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2 float-left">
+                </div>
+                <div class="col-5 bg-white">
+                    Nome
+                </div>
+                <div class="col text-right">
+                    Val.exame
+                </div>
+            </div>
+
+            <div class="row pb-2" *ngFor="let person of people;">
+                <div class="col-2 float-left">
+                    <img class="float-left" [src]="person.imageProfile" alt="face">
+                </div>
+                <div class="col-5 bg-white">
+                    {{ person.name }}
+                </div>
+                <div class="col text-right">
+                    <button class="btn btn-warning">Isento</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna direita -->
+
+        <div class="col-6">
+            <div class="row">
+                <div class="col-12 pl-0">
+                    Visitantes
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2 float-left">
+                </div>
+                <div class="col-5 bg-white">
+                    Nome
+                </div>
+                <div class="col text-right">
+                    Val.exame
+                </div>
+                <div class="col text-right">
+                    Tx.Pisc
+                </div>
+            </div>
+
+            <div class="row pb-2" *ngFor="let person of people;">
+                <div class="col-2 float-left bg-secondary ">
+                    <img class="float-left" [src]="person.imageProfile" alt="face">
+                </div>
+                <div class="col-5 bg-white">
+                    {{ person.name }}
+                </div>
+                <div class="col text-right">
+                    <button class="btn btn-warning">Isento</button>
+                </div>
+                <div class="col text-right">
+                    <button class="btn btn-info">$</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<br><br><br><br><br>
