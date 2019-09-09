@@ -37,7 +37,7 @@
 
   <div class="mt-5">
     <button class="btn btn-warning mr-5" type="button" (click)="closeDialog()">Fechar</button>
-    <button class="btn btn-success" type="submit" [disabled]="paymentMethodForms.controls.length < 1">Pagar</button>
+    <button class="btn btn-success" type="submit" [disabled]="paymentMethodForms.controls.length < 1 || differenceAmount() != 0">Pagar</button>
   </div>
 
   <table style="width:50%">
@@ -46,7 +46,7 @@
       </tr>
       <tr>
         <th>Método</th>
-        <th>Total: {{ sumPaymentMethods() }} | Valor Restante: {{ differenceAmount() }}</th>
+        <th>Total: {{ sumPaymentMethods() | currency: 'BRL' }} | Valor Restante: {{ differenceAmount() | currency: 'BRL'}}</th>
 
       </tr>
       <tr *ngFor="let paymentMethod of paymentMethodForms.controls;"
@@ -58,7 +58,7 @@
           'table-warning':paymentMethod.value.category === 'Nubank'
           }">
         <td>{{paymentMethod.value.category}}</td>
-        <td>{{paymentMethod.value.amount}}</td>
+        <td>{{paymentMethod.value.amount | currency: 'BRL'}}</td>
       </tr>
     </table>
 </form>

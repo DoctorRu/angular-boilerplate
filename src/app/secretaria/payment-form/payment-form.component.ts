@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
-import { reduce } from 'rxjs/operators';
+import { PaymentService } from './../../services/payment.service';
 
 @Component({
   selector: 'app-payment-form',
@@ -21,7 +21,8 @@ export class PaymentFormComponent implements OnInit {
   ];
 
   constructor(private fb: FormBuilder,
-              public dialogRef: MatDialogRef<PaymentFormComponent>) {
+              public dialogRef: MatDialogRef<PaymentFormComponent>,
+              public paymentServ: PaymentService ) {
                }
 
   ngOnInit() {
@@ -51,7 +52,16 @@ export class PaymentFormComponent implements OnInit {
 
   processPayment() {
     console.log('Processando pagamento');
-    // http post
+
+    // Pending: Service
+
+    // if (form.invalid) {
+    //   return;
+    // }
+   // form.resetForm();
+   
+    this.paymentServ.create(this.paymentForm);
+
     this.closeDialog();
   }
 
