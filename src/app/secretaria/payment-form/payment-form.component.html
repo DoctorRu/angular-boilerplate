@@ -1,74 +1,88 @@
-<p>payment-form works!</p>
 <form [formGroup]="paymentForm" (submit)="processPayment()">
-
+<!-- 
     Values: {{ paymentForm.value | json }}<br>
-    Payment Category: {{ paymentCategory | json }}<br>
+    Payment Category: {{ paymentCategory | json }}<br> -->
+  
+    <div>
+      <div class="row">
 
-    <mat-form-field class="xs">
-        <input matInput placeholder="Valor total" formControlName="totalAmount">
-    </mat-form-field>
-
-    <div formArrayName="payments">
-
-      <div *ngFor="let paymentMethod of paymentMethodForms.controls; let i=index" [formGroupName]="i">
-          <mat-form-field>
-            <mat-label>Método de pagamento</mat-label>
-            <mat-select formControlName="category" required>
-              <mat-option>--</mat-option>
-              <mat-option *ngFor="let category of paymentCategory" [value]="category.name">
-                {{ category.name }}
-              </mat-option>
-            </mat-select>
-            <!-- <mat-error *ngIf="animalControl.hasError('required')">Please choose an animal</mat-error>
-            <mat-hint>{{animalControl.value?.sound}}</mat-hint> -->
-          </mat-form-field>
-
-
-          <mat-form-field class="xs">
-              <input matInput placeholder="Valor" formControlName="amount" type="number">
-          </mat-form-field>
-
-          <button class="btn btn-danger" (click)="deletePayment(i)" type="button">Excluir</button>
-
+        <div class="col-sm-4 text-left">
+            <button class="btn btn-info mr-5" 
+                    (click)="addPaymentMethod()" 
+                    type="button">
+                    Adicionar pagamento</button>
+        </div>
+        <div class="col-sm-4 text-center">    
+            <button class="btn btn-warning mr-5" 
+                    type="button" 
+                    (click)="closeDialog()">
+                    Cancelar</button>
+        </div>            
+        <div class="col-sm-4 text-right"><div class="col-sm-4 text-right"></div>
+            <button class="btn btn-success" 
+                    type="submit" 
+                    [disabled]="paymentMethodForms.controls.length < 1 || differenceAmount() != 0">
+                    Processar pagamento</button>
+        </div>
       </div>
 
-      <button class="btn btn-info" (click)="addPaymentMethod()" type="button">Adicionar pagamento</button>
-    </div>
+      <div class="row table-info mt-3">
+        <div class="col-sm-4 text-left">
+          Valor a ser pago: {{ paymentForm.value.totalAmount | currency: 'BRL' }}        
+        </div>
 
-  <div class="mt-5">
-    <button class="btn btn-warning mr-5" type="button" (click)="closeDialog()">Fechar</button>
-    <button class="btn btn-success" type="submit" [disabled]="paymentMethodForms.controls.length < 1 || differenceAmount() != 0">Pagar</button>
+        <div class="col-sm-4 text-center">
+            Valor Restante: {{ differenceAmount() | currency: 'BRL' }}
+        </div>
+
+        <div class="col-sm-4 text-right">
+            Valor informado: {{ sumPaymentMethods() | currency: 'BRL' }}
+        </div>
+      </div>
+    </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <div formArrayName="payments">
+        <div *ngFor="let paymentMethod of paymentMethodForms.controls; let i=index" [formGroupName]="i">
+            <mat-form-field>
+              <mat-select formControlName="category" required>
+                <mat-option>--</mat-option>
+                <mat-option *ngFor="let category of paymentCategory" [value]="category.name">
+                  {{ category.name }}
+                </mat-option>
+              </mat-select>
+              <!-- <mat-error *ngIf="animalControl.hasError('required')">Please choose an animal</mat-error>
+              <mat-hint>{{animalControl.value?.sound}}</mat-hint> -->
+            </mat-form-field>
+
+            <mat-form-field class="xs">
+                <input matInput placeholder="Valor" formControlName="amount" type="number" required>
+            </mat-form-field>
+
+            <button class="btn btn-danger" (click)="deletePayment(i)" type="button">Excluir</button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="col-sm-6">
+      <table width='100%'>
+        <tr *ngIf="paymentMethodForms.controls.length > 0 ">
+          <th colspan="2">Método</th>
+        </tr>
+        <tr *ngFor="let paymentMethod of paymentMethodForms.controls;"
+          [ngClass]="{
+            'table-primary':paymentMethod.value.category === 'Cartão de crédito',
+            'table-secondary':paymentMethod.value.category === 'Cartão de débito',
+            'table-success':paymentMethod.value.category === 'Cheque',
+            'table-info':paymentMethod.value.category === 'Dinheiro',
+            'table-warning':paymentMethod.value.category === 'Nubank'
+            }">
+          <td>{{paymentMethod.value.category}}</td>
+          <td>{{paymentMethod.value.amount | currency: 'BRL'}}</td>
+        </tr>
+
+      </table>
+    </div>
   </div>
 
-  <table style="width:50%">
-      <tr>
-          <th class="text-cente" colspan="2">Resumo</th>
-      </tr>
-      <tr>
-        <th>Método</th>
-        <th>Total: {{ sumPaymentMethods() | currency: 'BRL' }} | Valor Restante: {{ differenceAmount() | currency: 'BRL'}}</th>
-
-      </tr>
-      <tr *ngFor="let paymentMethod of paymentMethodForms.controls;"
-        [ngClass]="{
-          'table-primary':paymentMethod.value.category === 'Cartão de crédito',
-          'table-secondary':paymentMethod.value.category === 'Cartão de débito',
-          'table-success':paymentMethod.value.category === 'Cheque',
-          'table-info':paymentMethod.value.category === 'Dinheiro',
-          'table-warning':paymentMethod.value.category === 'Nubank'
-          }">
-        <td>{{paymentMethod.value.category}}</td>
-        <td>{{paymentMethod.value.amount | currency: 'BRL'}}</td>
-      </tr>
-    </table>
 </form>
-
-
-<!--
-[ngClass]="{
-  'table-primary':payment.category === 'Cartão de crédito',
-  'table-secondary':payment.category === 'debit-card',
-  'table-success':payment.category === 'check',
-  'table-dange':payment.category === 'money',
-  'table-warning':payment.category === 'nubank'
-  }" -->

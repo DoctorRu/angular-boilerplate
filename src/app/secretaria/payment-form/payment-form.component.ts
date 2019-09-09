@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PaymentService } from './../../services/payment.service';
 
 @Component({
@@ -22,15 +23,18 @@ export class PaymentFormComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               public dialogRef: MatDialogRef<PaymentFormComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
               public paymentServ: PaymentService ) {
                }
 
   ngOnInit() {
     this.paymentForm = this.fb.group({
-      associatedID: '1',
-      totalAmount: '',
+      associatedID: this.data.associatedID,
+      totalAmount: this.data.totalAmount,
       payments: this.fb.array([])
     });
+    
+    console.log('data: ', this.data);
   }
 
   get paymentMethodForms() {
@@ -60,7 +64,7 @@ export class PaymentFormComponent implements OnInit {
     // }
    // form.resetForm();
    
-    this.paymentServ.create(this.paymentForm);
+    this.paymentServ.create(this.paymentForm.value);
 
     this.closeDialog();
   }
@@ -68,22 +72,20 @@ export class PaymentFormComponent implements OnInit {
   closeDialog() {
     // form reset
 
-    console.log('close value', this.paymentForm.value);
+    // console.log('close value', this.paymentForm.value);
     this.sumPaymentMethods();
     this.dialogRef.close(this.paymentForm.value);
   }
 
   sumPaymentMethods() {
    const totalAmount = this.paymentForm.get('payments').value.reduce((a, b) => +a + +b.amount, 0);
-   console.log('result sum result', totalAmount);
-   console.log('total ammount', +this.paymentForm.get('totalAmount').value);
-   console.log('diferença', +this.paymentForm.get('totalAmount').value - totalAmount);
+
    return totalAmount;
   }
 
   differenceAmount() {
     const diffAmount = +this.paymentForm.get('totalAmount').value - this.sumPaymentMethods();
-    console.log('diff', diffAmount);
+    // console.log('diff', diffAmount);
     return diffAmount;
     // return +this.paymentForm.get('totalAmount').value - +this.sumPaymentMethods();
   }

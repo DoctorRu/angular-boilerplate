@@ -35,12 +35,18 @@ public people = [
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.width = '60%';
-    dialogConfig.height = '70%';
+    dialogConfig.width = '95%';
+    dialogConfig.height = '90%'; 
+    dialogConfig.data = { 
+      associateID: '1',
+      totalAmount: 5000
+    };
+    
     const modalDialogPayment = this.modalDialog.open(PaymentFormComponent, dialogConfig);
+    // const modalDialogPayment = this.modalDialog.open(PaymentFormComponent, {data : {nome: 'Guerrero'}});
 
     modalDialogPayment.afterClosed().subscribe( result => {
-      console.log(`Dialog result: ${JSON.stringify(result)}`);
+      // console.log(`Dialog result: ${JSON.stringify(result)}`);
     });
 
   }
